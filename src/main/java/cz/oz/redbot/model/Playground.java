@@ -50,6 +50,12 @@ public class Playground {
         this.cells[co.y][co.x] = fieldObject;
     }
     
+    /**
+     * @returns  View with offset set by given coords.
+     */
+    public PlaygroundView getView( Coords co ){
+        return new PlaygroundView( this, co.x, co.y );
+    }
     
 }// class
 

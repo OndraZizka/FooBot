@@ -10,6 +10,13 @@ import java.util.TreeSet;
  * @author Ondrej Zizka
  */
 public class State {
+
+    
+    public State(int myWormIndex) {
+        this.myWormIndex = myWormIndex;
+    }
+    
+    
     
     // Playground.
     public Playground playground;
@@ -21,8 +28,11 @@ public class State {
     
     private SortedSet<Ice> icesByDistance = new TreeSet();
     
+    
+    private int myWormIndex;
+    
     //public Worm myWorm;
-    //public Worm getMyWorm(){ return this.myWorm; }
+    public Worm getMyWorm(){ return this.worms.get( myWormIndex ); }
     
     public List<Worm> worms = new ArrayList();
     public List<Worm> getWorms(){ return this.worms; }

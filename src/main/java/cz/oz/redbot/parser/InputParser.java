@@ -25,14 +25,14 @@ public class InputParser {
     
     private final int WORMS_COUNT = 4;
     
-    public State parseState( String textInput, int whichWormAmI ) throws RedBotEx {
+    public State parseState( String textInput, int myWormIndex ) throws RedBotEx {
         
-        if( whichWormAmI >= WORMS_COUNT )
-            throw new RedBotEx("I am told to be " + (whichWormAmI + 1) + "th worm of " + WORMS_COUNT + ".");
+        if( myWormIndex >= WORMS_COUNT )
+            throw new RedBotEx("I am told to be " + (myWormIndex + 1) + "th worm of " + WORMS_COUNT + ".");
         
         
         // To be returned.
-        State state = new State();
+        State state = new State( myWormIndex );
 
         
         BufferedReader lines = new BufferedReader( new StringReader(textInput) );
