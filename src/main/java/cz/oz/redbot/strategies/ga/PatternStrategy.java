@@ -1,9 +1,10 @@
 package cz.oz.redbot.strategies.ga;
 
-import cz.oz.redbot.model.EDirections;
-import cz.oz.redbot.model.PlaygroundView;
 import cz.oz.redbot.model.State;
+import cz.oz.redbot.model.view.IView;
+import cz.oz.redbot.strategies.Decision;
 import cz.oz.redbot.strategies.IDecision;
+import cz.oz.redbot.strategies.StrategySupport;
 import java.util.List;
 
 /**
@@ -16,27 +17,32 @@ import java.util.List;
  * 
  * @author Ondrej Zizka
  */
-public class PatternStrategy implements IDecision {
+public class PatternStrategy extends StrategySupport implements IDecision {
     
     private List<Pattern> patterns;
 
     
     
     @Override
-    public EDirections getDirection(State state) {
+    public Decision getDirection( State state ) {
         
         this.findBestMatchingPatternAroundWormsHead( state );
         
-        return EDirections.AHEAD;
+        return new Decision( 0, 100, 0 );
     }
 
     
     private Pattern findBestMatchingPatternAroundWormsHead( State state ) {
-        return findBestMatchingPattern( state.getPlayground().getView( state.getMyWorm().getHead() )  );
+        
+        IView view = getNormalizedView(state);
+                
+        return findBestMatchingPattern( view );
     }
 
     
-    private Pattern findBestMatchingPattern( PlaygroundView view ) {
+    private Pattern findBestMatchingPattern( IView view ) {
+        
+        
         // TODO;
     }
     

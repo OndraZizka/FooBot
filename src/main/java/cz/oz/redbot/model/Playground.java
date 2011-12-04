@@ -1,12 +1,15 @@
 package cz.oz.redbot.model;
 
+import cz.oz.redbot.model.view.OffsetView;
+import cz.oz.redbot.model.fo.FieldObject;
 import cz.oz.redbot.ex.RedBotEx;
+import cz.oz.redbot.model.view.IView;
 
 /**
  *
  * @author Ondrej Zizka
  */
-public class Playground {
+public class Playground implements IView {
     
     private FieldObject[][] cells;
     
@@ -53,9 +56,27 @@ public class Playground {
     /**
      * @returns  View with offset set by given coords.
      */
-    public PlaygroundView getView( Coords co ){
-        return new PlaygroundView( this, co.x, co.y );
+    public OffsetView getOffsetView( Coords co ){
+        return new OffsetView( this, co.x, co.y );
     }
+    
+    
+    
+    @Override
+    public int getRotation() {
+        return 0;
+    }
+
+    @Override
+    public int fixDirection(int dir) {
+        return dir;
+    }
+
+    @Override
+    public Coords fixCoords(Coords co) {
+        return co;
+    }
+    
     
 }// class
 

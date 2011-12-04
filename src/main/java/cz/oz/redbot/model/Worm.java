@@ -46,6 +46,10 @@ public class Worm {
     public int getDirection() {        return direction;    }
     public void setDirection(int direction) {        this.direction = direction;    }
 
+    public int getLength() {
+        return this.elements.size();
+    }
+
     
     
     

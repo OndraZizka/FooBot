@@ -10,7 +10,7 @@ import cz.oz.redbot.model.State;
  */
 public interface IDecision {
     
-    public EDirections getDirection( State state );
+    public Decision getDirection( State state );
     
 }// class
 

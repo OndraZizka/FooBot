@@ -1,5 +1,7 @@
 package cz.oz.redbot.model;
 
+import cz.oz.redbot.model.fo.Ice;
+import cz.oz.redbot.model.fo.Flower;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -21,7 +23,7 @@ public class State {
     // Playground.
     public Playground playground;
     public Playground getPlayground() {        return playground;    }
-    public void setPlayground(Playground playground) {        this.playground = playground;    }
+    public void setPlayground( Playground playground ) {        this.playground = playground;    }
     
     
     private SortedSet<Flower> flowersByDistance = new TreeSet();
@@ -58,9 +60,20 @@ public class State {
     private Counters counters;
     public Counters getCounters() {        return counters;    }
     public void setCounters(Counters counters) {        this.counters = counters;    }
+
+    /**
+     * @returns  A list of worms which are not mine.
+     */
+    public List<Worm> getOtherWorms() {
+        List<Worm> worms = getWorms();
+        worms.remove( getMyWorm() );
+        return worms;
+    }
         
 
-    
+    /**
+     *  Just grouping few properties.
+     */
     public class Counters {    
             private int roundNo;
             private int roundsMax;
