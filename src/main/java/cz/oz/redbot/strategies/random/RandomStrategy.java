@@ -1,6 +1,5 @@
 package cz.oz.redbot.strategies.random;
 
-import cz.oz.redbot.model.EDirections;
 import cz.oz.redbot.model.State;
 import cz.oz.redbot.strategies.Decision;
 import cz.oz.redbot.strategies.IDecision;

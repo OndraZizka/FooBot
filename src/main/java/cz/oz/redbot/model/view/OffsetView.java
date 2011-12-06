@@ -27,11 +27,15 @@ public final class OffsetView extends ViewBase implements IView {
     
     
     @Override
-    public Coords fixCoords( Coords co ) {
+    public Coords pullCoords( Coords co ) {
         return co.add( this.offX, this.offY );
     }
 
-    
+    @Override
+    public Coords pushCoords( Coords co ) {
+        return co.add( -this.offX, -this.offY );
+    }
+
     
     
 }// class

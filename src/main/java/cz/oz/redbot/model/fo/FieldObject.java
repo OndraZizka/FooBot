@@ -51,6 +51,13 @@ public abstract class FieldObject {
             return 100;
         }
     };
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{ " + coords + " }";
+    }
+    
+    
     
     
 }// class

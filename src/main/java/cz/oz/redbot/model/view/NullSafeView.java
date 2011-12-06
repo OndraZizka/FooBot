@@ -21,6 +21,12 @@ public class NullSafeView extends ViewBase implements IView {
     }
     
     @Override
+    public FieldObject getCellPush( Coords co ) {
+        FieldObject cell = this.src.getCellPush(co);
+        return cell != null ? cell : FieldObject.EMPTY;
+    }
+    
+    @Override
     public int getRotation() {
         return this.src.getRotation();
     }

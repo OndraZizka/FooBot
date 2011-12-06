@@ -49,9 +49,17 @@ public class Worm {
     public int getLength() {
         return this.elements.size();
     }
+    
+    public boolean isDead(){
+        return this.frozen == 999999999;
+    }
 
     
     
+    @Override
+    public String toString() {
+        return "Worm{" + "id=" + id + ", head=" + head + ", direction=" + direction + '}';
+    }
     
 }// class
 

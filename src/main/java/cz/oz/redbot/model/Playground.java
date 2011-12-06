@@ -46,6 +46,11 @@ public class Playground implements IView {
         return cells[co.y][co.x];
     }
 
+    public FieldObject getCellPush( Coords co ) {
+        if( ! isInBounds( co ) )  return null;
+        return cells[co.y][co.x];
+    }
+
     public void setCell( Coords co, FieldObject fieldObject) throws RedBotEx {
         if( ! isInBounds( co ) )
             throw new RedBotEx("Playground indexes out of bounds: [" + co.x + ", " + co.y + "]");
@@ -73,7 +78,12 @@ public class Playground implements IView {
     }
 
     @Override
-    public Coords fixCoords(Coords co) {
+    public Coords pullCoords(Coords co) {
+        return co;
+    }
+    
+    @Override
+    public Coords pushCoords(Coords co) {
         return co;
     }
     

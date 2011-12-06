@@ -42,7 +42,7 @@ public class PatternStrategy extends StrategySupport implements IDecision {
     
     private Pattern findBestMatchingPattern( IView view ) {
         
-        
+        return null;
         // TODO;
     }
     

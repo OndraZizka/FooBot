@@ -39,7 +39,12 @@ public final class RotatingView implements IView {
     
     @Override
     public FieldObject getCell( Coords co ) {
-        return this.src.getCell( this.fixCoords(co) );
+        return this.src.getCell( this.pullCoords(co) );
+    }
+
+    @Override
+    public FieldObject getCellPush( Coords co ) {
+        return this.src.getCell( this.pushCoords(co) );
     }
 
     @Override
@@ -54,16 +59,35 @@ public final class RotatingView implements IView {
     }
 
     @Override
-    public Coords fixCoords( Coords co ) {
+    public Coords pullCoords( Coords co ) {
         Coords off = this.center.getOffsetOf( co );
         
         Coords res = null;
         switch( this.dir ){
-            case 1: res = this.center.add( -off.y, off.x  );
-            case 2: res = this.center.add( -off.x, -off.y  );
-            case 3: res = this.center.add(  off.y, -off.x  );
-            case 0: res = co;
+            case 1: res = new Coords(  off.y, -off.x  ); break;
+            case 2: res = new Coords( -off.x, -off.y  ); break;
+            case 3: res = new Coords( -off.y,  off.x  ); break;
+            case 0: res = off; break;
         }
+        return res;
+    }
+    
+    
+    @Override
+    public Coords pushCoords( Coords co ) {
+        
+        /// First, rotate it.
+        Coords off = null;
+        switch( this.dir ){
+            case 1: off = new Coords( -co.y,  co.x  ); break;
+            case 2: off = new Coords( -co.x, -co.y  ); break;
+            case 3: off = new Coords(  co.y, -co.x  ); break;
+            case 0: off = co; break;
+        }
+        
+        // Then apply it as a offset to the center.
+        Coords res = this.center.add( off );
+        
         return res;
     }
     

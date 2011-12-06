@@ -15,20 +15,42 @@ public class Coords {
     public int x;
     public int y;
 
-    public Coords(int x, int y) {
+    public Coords( int x, int y ) {
         this.x = x;
         this.y = y;
     }
 
-    public Coords getOffsetOf(Coords co) {
-        return new Coords( x - this.x, y - this.y );
+    public Coords getOffsetOf( Coords co ) {
+        return new Coords( co.x - this.x, co.y - this.y );
     }
 
-    public Coords add( int i, int x ) {
+    public Coords add( int x, int y ) {
         return new Coords( this.x + x, this.y + y);
+    }
+    
+    public Coords add( Coords co ) {
+        return this.add( co.x, co.y );
     }
 
     
+
+    /**  Optimization - no need for square root (e.g. for comparison). */
+    public int distancePowerOf( Coords co ) {
+        Coords off = this.getOffsetOf( co );
+        return ( off.x * off.x + off.y * off.y );
+    }
+
+    /** In a grid, distances are measured by steps to get there. */
+    public int distanceStepsOf( Coords co ) {
+        Coords off = this.getOffsetOf( co );
+        return ( Math.abs(off.x) + Math.abs(off.y) );
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%02d,%02d]", x, y);
+    }
+
     
     
     
@@ -51,10 +73,6 @@ public class Coords {
         return hash;
     }
 
-    
-    
-    
-    
     
 }// class
 

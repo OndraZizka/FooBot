@@ -2,11 +2,14 @@ package cz.oz.redbot.strategies.computed;
 
 import cz.oz.redbot.model.Coords;
 import cz.oz.redbot.model.State;
+import cz.oz.redbot.model.fo.FieldObject;
 import cz.oz.redbot.model.view.IView;
 import cz.oz.redbot.model.view.RotatingView;
 import cz.oz.redbot.strategies.Decision;
 import cz.oz.redbot.strategies.IDecision;
 import cz.oz.redbot.strategies.StrategySupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *  Checks how much "makesMeDead" cells there is in given direction.
@@ -14,6 +17,9 @@ import cz.oz.redbot.strategies.StrategySupport;
  *  @author Ondrej Zizka
  */
 public class AvoidFullSpacesStrategy extends StrategySupport implements IDecision {
+    
+    private static final Logger log = LoggerFactory.getLogger( AvoidFullSpacesStrategy.class );
+    
 
     @Override
     public Decision getDirection( State state ) {
@@ -26,7 +32,9 @@ public class AvoidFullSpacesStrategy extends StrategySupport implements IDecisio
         int ahead = 100 - getFullness( aheadView, 5 );
         int right = 100 - getFullness( rightView, 5 );
         
-        return new Decision( left, ahead, right );
+        Decision dec = new Decision( left, ahead, right );
+        log.info(" AVOID-FULL --> " + dec);
+        return dec;
     }
 
     
@@ -47,12 +55,13 @@ public class AvoidFullSpacesStrategy extends StrategySupport implements IDecisio
 
             for (int x = -spread; x <= spread; x++) {
                 Coords cell = new Coords( x, -y ); 
-                if( view.getCell( cell ).makesMeDead() )
+                FieldObject fo = view.getCellPush( cell );
+                if( fo != null && fo.makesMeDead() )
                     countFull++;
                 count++;
             }
         }
-        return 100 * count / countFull;
+        return 100 * countFull / count;
     }
     
 }// class

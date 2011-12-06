@@ -2,14 +2,12 @@ package cz.oz.redbot.strategies.computed;
 
 import cz.oz.redbot.model.Coords;
 import cz.oz.redbot.model.State;
-import cz.oz.redbot.model.fo.FieldObject;
-import cz.oz.redbot.model.fo.Wall;
 import cz.oz.redbot.model.view.IView;
-import cz.oz.redbot.model.view.NullSafeView;
-import cz.oz.redbot.model.view.RotatingView;
 import cz.oz.redbot.strategies.Decision;
 import cz.oz.redbot.strategies.IDecision;
 import cz.oz.redbot.strategies.StrategySupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *  This strategy only cares about nearest 3 cells.
@@ -20,20 +18,33 @@ import cz.oz.redbot.strategies.StrategySupport;
  */
 public class NoBrainersStrategy extends StrategySupport implements IDecision {
 
+    private static final Logger log = LoggerFactory.getLogger(NoBrainersStrategy.class);
+    
     
     @Override
     public Decision getDirection( State state ) {
         
         // Move view to worm's head
         // and rotate the view to act like worm is always heading up.
-        IView view = new RotatingView( state.getPlayground(), state.getMyWorm().getDirection(), state.getMyWorm().getHead() );
-        view = new NullSafeView(view);
+        IView view = getNormalizedView(state);
         
-        return new Decision(
-                view.getCell( Coords.LEFT ).howMuchILikeIt(),
-                view.getCell( Coords.UP ).howMuchILikeIt(),
-                view.getCell( Coords.RIGHT ).howMuchILikeIt()
+        log.info(" NO-BRAINER: "
+                + "\n                         {} {} {} "
+                + "\n                         {} {} {} "
+                + "\n                         {} {} {} ",
+                new Object[]{
+                    Coords.LEFT,   view.getCellPush( Coords.LEFT ),   view.pushCoords(Coords.LEFT),
+                    Coords.UP,     view.getCellPush( Coords.UP ),     view.pushCoords(Coords.UP),
+                    Coords.RIGHT,  view.getCellPush( Coords.RIGHT ),  view.pushCoords(Coords.RIGHT)
+                }
         );
+        Decision dec = new Decision(
+                                    view.getCellPush( Coords.LEFT ).howMuchILikeIt(),
+                                    view.getCellPush( Coords.UP ).howMuchILikeIt(),
+                                    view.getCellPush( Coords.RIGHT ).howMuchILikeIt()
+                            );
+        log.info(" NO-BRAINER --> " + dec);
+        return dec;
         
     }// getDirection()
     

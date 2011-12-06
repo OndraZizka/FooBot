@@ -6,16 +6,18 @@ import cz.oz.redbot.model.Playground;
 import cz.oz.redbot.model.fo.FieldObject;
 import cz.oz.redbot.model.fo.Flower;
 import cz.oz.redbot.model.fo.Ice;
-import cz.oz.redbot.model.view.IView;
 import cz.oz.redbot.model.State;
 import cz.oz.redbot.model.fo.Wall;
 import cz.oz.redbot.model.Worm;
 import cz.oz.redbot.model.fo.WormElement;
+import cz.oz.redbot.strategies.computed.NoBrainersStrategy;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Parses input as per http://wiki.brq.redhat.com/RedBot .
@@ -24,7 +26,11 @@ import org.apache.commons.lang.StringUtils;
  */
 public class InputParser {
     
+    private static final Logger log = LoggerFactory.getLogger(NoBrainersStrategy.class);
+    
     private final int WORMS_COUNT = 4;
+    
+    
     
     public State parseState( String textInput, int myWormIndex ) throws RedBotEx {
         
@@ -43,6 +49,9 @@ public class InputParser {
             // 1st line - round info.
             {
                 line = lines.readLine();
+                log.info("\n\n###############################################################################"
+                         + "\n   Round " + line + "\n" );
+                
                 String[] parts = StringUtils.split(line);
                 if( parts.length < 3 )
                     throw new RedBotEx("Not enough round info numbers: " + line);
@@ -83,10 +92,7 @@ public class InputParser {
                 
                 Worm worm = new Worm( wormNo, new Coords(headX, headY), new Coords(tailX, tailY), frozen, points );
                 
-                /*if( wormNo == whichWormAmI )
-                    state.myWorm = worm;
-                else*/
-                    state.getWorms().add(worm);
+                state.getWorms().add(worm);
             }
             
             
@@ -103,7 +109,7 @@ public class InputParser {
                 
                 // Cell by cell...
                 for( int x = 0; x < pg.getHei(); x++ ) {
-                    if(' ' == ( line.charAt(x) )) continue;
+                    if(' ' == ( line.charAt(x) ))   continue;
                     
                     Coords curCoords = new Coords(x, y);
                     
@@ -111,35 +117,42 @@ public class InputParser {
                     char c = line.charAt(x);
                     
                     // Wall.
-                    if( '#' == c )
+                    if( '#' == c ){
                         fieldObject = new Wall( curCoords );
+                    }
                     
                     // Ice.
-                    if( '*' == c )
+                    if( '*' == c ){
                         fieldObject = new Ice( curCoords );
+                        state.addIce( (Ice) fieldObject );
+                    }
                     
                     // Flower.
-                    if( CharUtils.isAsciiNumeric( c ) )
+                    if( CharUtils.isAsciiNumeric( c ) ){
                         fieldObject = new Flower( curCoords, CharUtils.toIntValue(c) );
+                        state.addFlower( (Flower) fieldObject );
+                    }
                     
-                    if( ! CharUtils.isAsciiAlphaLower(c) ) continue;
-
                     // Worms.
-                    // abcd, hijk, opqr, wxyz
-                    int pos = "abcd hijk opqr wxyz".indexOf( c );
-                    if( pos == -1 )
-                        throw new RedBotEx("Invalid character in playground: " + line);
-                    
-                    int wormNo               = pos / 5;
-                    int nextElementDirection = pos % 5;
-                    
-                    // Create worm element.
-                    fieldObject = new WormElement( curCoords, wormNo );
-                    Worm curWorm = state.getWorm( wormNo );
-                    curWorm.getElements().add( curCoords );
-                    if( curCoords.equals( curWorm.getHead() ) )
-                        // 0 = up, 1 = right, 2 = down, 3 = left.
-                        curWorm.setDirection( nextElementDirection );
+                    if( CharUtils.isAsciiAlphaLower(c) ){;
+
+                        // abcd, hijk, opqr, wxyz
+                        int pos = "abcd hijk opqr wxyz".indexOf( c );
+                        if( pos == -1 )
+                            throw new RedBotEx("Invalid character in playground: " + line);
+
+                        int wormNo               = pos / 5;
+                        int nextElementDirection = pos % 5;
+
+                        // Create worm element.
+                        fieldObject = new WormElement( curCoords, wormNo );
+                        Worm curWorm = state.getWorm( wormNo );
+                        curWorm.getElements().add( curCoords );
+                        if( curCoords.equals( curWorm.getHead() ) ){
+                            // 0 = up, 1 = right, 2 = down, 3 = left.
+                            curWorm.setDirection( nextElementDirection );
+                        }
+                    }
                     
                     // Fill the cell with the created object.
                     pg.setCell( curCoords, fieldObject );
