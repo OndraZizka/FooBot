@@ -102,6 +102,29 @@ public final class Decision {
     public String toString() {
         return "Decision{ " + left + " | " + ahead + " | " + right + " }";
     }
+
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)  return false;
+        if (getClass() != obj.getClass())  return false;
+        final Decision other = (Decision) obj;
+        if (this.ahead != other.ahead)  return false;
+        if (this.left != other.left)  return false;
+        if (this.right != other.right)  return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + this.ahead;
+        hash = 97 * hash + this.left;
+        hash = 97 * hash + this.right;
+        return hash;
+    }
+    
+    
     
     
 }// class

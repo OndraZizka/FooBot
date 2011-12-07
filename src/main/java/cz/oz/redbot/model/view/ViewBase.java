@@ -17,13 +17,8 @@ public abstract class ViewBase implements IView {
     
     
     @Override
-    public FieldObject getCell( Coords co ) {
-        return this.src.getCell( this.pullCoords(co) );
-    }
-
-    @Override
-    public FieldObject getCellPush( Coords co ) {
-        return this.src.getCellPush( this.pullCoords(co) );
+    public FieldObject getCellProjected( Coords co ) {
+        return this.src.getCellProjected( this.pullCoords(co) );
     }
 
     @Override
@@ -33,8 +28,8 @@ public abstract class ViewBase implements IView {
     
     
     @Override
-    public int fixDirection( int dir ){
-        return src.fixDirection(dir);
+    public int pullDirection( int dir ){
+        return src.pullDirection(dir);
     }
 
     

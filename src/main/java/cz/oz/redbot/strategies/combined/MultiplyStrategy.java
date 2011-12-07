@@ -44,6 +44,10 @@ public class MultiplyStrategy implements IDecision {
         for( IDecision strategy : this.stretegies ) {
             Decision dec = strategy.getDirection( state );
             log.info( strategy.getClass().getSimpleName() + " gives " + dec );
+            if( Decision.ZERO.equals( dec )){
+                log.info("  Skipping ZERO multiplying as it's not useful.");
+                continue;
+            }
             decSum = decSum.multiply( dec );
         }
         

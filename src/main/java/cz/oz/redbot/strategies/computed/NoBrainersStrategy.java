@@ -33,15 +33,15 @@ public class NoBrainersStrategy extends StrategySupport implements IDecision {
                 + "\n                         {} {} {} "
                 + "\n                         {} {} {} ",
                 new Object[]{
-                    Coords.LEFT,   view.getCellPush( Coords.LEFT ),   view.pushCoords(Coords.LEFT),
-                    Coords.UP,     view.getCellPush( Coords.UP ),     view.pushCoords(Coords.UP),
-                    Coords.RIGHT,  view.getCellPush( Coords.RIGHT ),  view.pushCoords(Coords.RIGHT)
+                    Coords.LEFT,   view.getCellProjected( Coords.LEFT ),   view.pushCoords(Coords.LEFT),
+                    Coords.UP,     view.getCellProjected( Coords.UP ),     view.pushCoords(Coords.UP),
+                    Coords.RIGHT,  view.getCellProjected( Coords.RIGHT ),  view.pushCoords(Coords.RIGHT)
                 }
         );
         Decision dec = new Decision(
-                                    view.getCellPush( Coords.LEFT ).howMuchILikeIt(),
-                                    view.getCellPush( Coords.UP ).howMuchILikeIt(),
-                                    view.getCellPush( Coords.RIGHT ).howMuchILikeIt()
+                                    view.getCellProjected( Coords.LEFT ).howMuchILikeIt(),
+                                    view.getCellProjected( Coords.UP ).howMuchILikeIt(),
+                                    view.getCellProjected( Coords.RIGHT ).howMuchILikeIt()
                             );
         log.info(" NO-BRAINER --> " + dec);
         return dec;

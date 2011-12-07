@@ -43,7 +43,7 @@ public class AvoidWormCollisionStrategy extends StrategySupport implements IDeci
             // Imagine a line in worms current direction;
             // Compute whether we will hit it in few rounds.
             
-            int dir = view.fixDirection( worm.getDirection() );
+            int dir = view.pullDirection( worm.getDirection() );
             
             Coords wormHead = view.pullCoords( worm.getHead() );
             Coords myWormHead = view.pullCoords( myWorm.getHead() );

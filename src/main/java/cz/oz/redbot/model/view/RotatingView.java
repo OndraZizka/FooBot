@@ -38,14 +38,14 @@ public final class RotatingView implements IView {
     
     
     @Override
-    public FieldObject getCell( Coords co ) {
-        return this.src.getCell( this.pullCoords(co) );
+    public FieldObject getCellProjected( Coords co ) {
+        return this.src.getCellProjected( this.pullCoords(co) );
     }
 
-    @Override
+    /*@Override
     public FieldObject getCellPush( Coords co ) {
         return this.src.getCell( this.pushCoords(co) );
-    }
+    }*/
 
     @Override
     public int getRotation() {
@@ -53,21 +53,21 @@ public final class RotatingView implements IView {
     }
 
     @Override
-    public int fixDirection(int dir) {
+    public int pullDirection(int dir) {
         // Fixing direction is opposite to view rotation.
         return (dir - this.dir) % 4;
     }
 
     @Override
     public Coords pullCoords( Coords co ) {
-        Coords off = this.center.getOffsetOf( co );
+        Coords co2 = src.pullCoords(co);
         
         Coords res = null;
         switch( this.dir ){
-            case 1: res = new Coords(  off.y, -off.x  ); break;
-            case 2: res = new Coords( -off.x, -off.y  ); break;
-            case 3: res = new Coords( -off.y,  off.x  ); break;
-            case 0: res = off; break;
+            case 1: res = new Coords(  co2.y, -co2.x  ); break;
+            case 2: res = new Coords( -co2.x, -co2.y  ); break;
+            case 3: res = new Coords( -co2.y,  co2.x  ); break;
+            case 0: res = co2; break;
         }
         return res;
     }
@@ -76,19 +76,17 @@ public final class RotatingView implements IView {
     @Override
     public Coords pushCoords( Coords co ) {
         
-        /// First, rotate it.
-        Coords off = null;
+        Coords res = null;
         switch( this.dir ){
-            case 1: off = new Coords( -co.y,  co.x  ); break;
-            case 2: off = new Coords( -co.x, -co.y  ); break;
-            case 3: off = new Coords(  co.y, -co.x  ); break;
-            case 0: off = co; break;
+            case 1: res = new Coords( -co.y,  co.x  ); break;
+            case 2: res = new Coords( -co.x, -co.y  ); break;
+            case 3: res = new Coords(  co.y, -co.x  ); break;
+            case 0: res = co; break;
         }
         
-        // Then apply it as a offset to the center.
-        Coords res = this.center.add( off );
+        // return res;
+        return src.pushCoords( res );
         
-        return res;
     }
     
     

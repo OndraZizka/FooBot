@@ -18,8 +18,6 @@ public class Playground implements IView {
     
     public Playground( int wid, int hei ){
         this.cells = new FieldObject[hei][wid];
-        /*for (int y = 0; y < hei; i++) {
-        }*/
         this.wid = wid;
         this.hei = hei;
     }
@@ -41,28 +39,20 @@ public class Playground implements IView {
     /**
      *   @returns  null if empty or out of bounds, respective FieldObject otherwise.
      */
-    public FieldObject getCell( Coords co ) {
+    public FieldObject getCellProjected( Coords co ) {
         if( ! isInBounds( co ) )  return null;
         return cells[co.y][co.x];
     }
 
     public FieldObject getCellPush( Coords co ) {
-        if( ! isInBounds( co ) )  return null;
-        return cells[co.y][co.x];
+        return getCellProjected( co );
     }
 
     public void setCell( Coords co, FieldObject fieldObject) throws RedBotEx {
         if( ! isInBounds( co ) )
-            throw new RedBotEx("Playground indexes out of bounds: [" + co.x + ", " + co.y + "]");
+            throw new RedBotEx("Playground indexes out of bounds: [" + co.y + ", " + co.x + "]");
         
         this.cells[co.y][co.x] = fieldObject;
-    }
-    
-    /**
-     * @returns  View with offset set by given coords.
-     */
-    public OffsetView getOffsetView( Coords co ){
-        return new OffsetView( this, co.x, co.y );
     }
     
     
@@ -73,7 +63,7 @@ public class Playground implements IView {
     }
 
     @Override
-    public int fixDirection(int dir) {
+    public int pullDirection(int dir) {
         return dir;
     }
 

@@ -20,7 +20,7 @@ public final class PgTools {
         for( int y = Math.min(a.y, b.y);  y <= Math.max(a.y, b.y);  y++ ) {
             for( int x = Math.min(a.x, b.x);  x <= Math.max(a.x, b.x);  x++ ) {
                 cellsTotal++; // Not optimal but I was lazy coding the math.
-                if( view.getCell( new Coords(x,y) ).makesMeDead() )
+                if( view.getCellProjected( new Coords(x,y) ).makesMeDead() )
                     cellsFull++;
             }
         }

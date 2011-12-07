@@ -25,14 +25,14 @@ public final class FlipView extends ViewBase implements IView {
     
     
     @Override
-    public FieldObject getCell( Coords co ) {
+    public FieldObject getCellProjected( Coords co ) {
         
         Coords off = center.getOffsetOf( co );
         
         Coords res = null;
         if( this.horiz )  res = center.add(  off.x, -off.y );
         else              res = center.add( -off.x,  off.y );
-        return src.getCell( res );
+        return src.getCellProjected( res );
     }
     
     @Override

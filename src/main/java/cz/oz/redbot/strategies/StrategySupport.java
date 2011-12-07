@@ -3,7 +3,7 @@ package cz.oz.redbot.strategies;
 import cz.oz.redbot.model.State;
 import cz.oz.redbot.model.view.IView;
 import cz.oz.redbot.model.view.NullSafeView;
-import cz.oz.redbot.model.view.RotatingView;
+import cz.oz.redbot.model.view.RotatingOffsetView;
 
 /**
  *  Methods shared by most strategy implementations.
@@ -20,7 +20,7 @@ public class StrategySupport {
      */
     public static IView getNormalizedView( State state )
     {
-        IView view = new RotatingView( state.getPlayground(), state.getMyWorm().getDirection(), state.getMyWorm().getHead() );
+        IView view = new RotatingOffsetView( state.getPlayground(), state.getMyWorm().getDirection(), state.getMyWorm().getHead() );
         view = new NullSafeView(view);
         return view;
     }

@@ -10,7 +10,6 @@ import cz.oz.redbot.model.State;
 import cz.oz.redbot.model.fo.Wall;
 import cz.oz.redbot.model.Worm;
 import cz.oz.redbot.model.fo.WormElement;
-import cz.oz.redbot.strategies.computed.NoBrainersStrategy;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -26,7 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 public class InputParser {
     
-    private static final Logger log = LoggerFactory.getLogger(NoBrainersStrategy.class);
+    private static final Logger log = LoggerFactory.getLogger(InputParser.class);
     
     private final int WORMS_COUNT = 4;
     
@@ -143,9 +142,10 @@ public class InputParser {
 
                         int wormNo               = pos / 5;
                         int nextElementDirection = pos % 5;
+                        //log.debug("  INPUT:  Char " + c + " == direction " + nextElementDirection ); // OK.
 
                         // Create worm element.
-                        fieldObject = new WormElement( curCoords, wormNo );
+                        fieldObject = new WormElement( curCoords, state.getWorm(wormNo), nextElementDirection, state );
                         Worm curWorm = state.getWorm( wormNo );
                         curWorm.getElements().add( curCoords );
                         if( curCoords.equals( curWorm.getHead() ) ){

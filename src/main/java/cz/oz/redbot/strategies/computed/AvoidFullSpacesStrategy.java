@@ -4,7 +4,7 @@ import cz.oz.redbot.model.Coords;
 import cz.oz.redbot.model.State;
 import cz.oz.redbot.model.fo.FieldObject;
 import cz.oz.redbot.model.view.IView;
-import cz.oz.redbot.model.view.RotatingView;
+import cz.oz.redbot.model.view.RotatingOffsetView;
 import cz.oz.redbot.strategies.Decision;
 import cz.oz.redbot.strategies.IDecision;
 import cz.oz.redbot.strategies.StrategySupport;
@@ -25,8 +25,8 @@ public class AvoidFullSpacesStrategy extends StrategySupport implements IDecisio
     public Decision getDirection( State state ) {
         
         IView aheadView = getNormalizedView( state );
-        IView leftView  = new RotatingView( aheadView, 3 );
-        IView rightView = new RotatingView( aheadView, 1 );
+        IView leftView  = new RotatingOffsetView( aheadView, 3 );
+        IView rightView = new RotatingOffsetView( aheadView, 1 );
         
         int left  = 100 - getFullness( leftView,  5 );
         int ahead = 100 - getFullness( aheadView, 5 );
@@ -55,7 +55,7 @@ public class AvoidFullSpacesStrategy extends StrategySupport implements IDecisio
 
             for (int x = -spread; x <= spread; x++) {
                 Coords cell = new Coords( x, -y ); 
-                FieldObject fo = view.getCellPush( cell );
+                FieldObject fo = view.getCellProjected( cell );
                 if( fo != null && fo.makesMeDead() )
                     countFull++;
                 count++;
