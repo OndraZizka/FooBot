@@ -1,7 +1,7 @@
 package cz.oz.redbot.model.view;
 
 import cz.oz.redbot.model.Coords;
-import cz.oz.redbot.model.fo.FieldObject;
+
 
 /**
  *
@@ -25,18 +25,31 @@ public final class OffsetView extends ViewBase implements IView {
         this.offY = off.y;
     }
     
+
+    
+    @Override
+    public Coords transformPush( Coords co ) {
+        return co.add( -this.offX, -this.offY );
+    }
+
+    @Override
+    public Coords transformPull( Coords co ) {
+        return co.add( this.offX, this.offY );
+    }
+
+    
+    
     
     @Override
     public Coords pullCoords( Coords co ) {
-        return co.add( this.offX, this.offY );
+        return transformPull( src.pullCoords(co) );
     }
 
     @Override
     public Coords pushCoords( Coords co ) {
-        return co.add( -this.offX, -this.offY );
+        return src.pushCoords( transformPush(co) );
     }
 
-    
     
 }// class
 

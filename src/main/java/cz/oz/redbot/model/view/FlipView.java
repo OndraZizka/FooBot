@@ -22,7 +22,26 @@ public final class FlipView extends ViewBase implements IView {
         this.center = center;
         this.horiz = horiz;
     }
+
     
+    // Core two methods.
+    
+    @Override
+    public Coords transformPush( Coords co ) {
+        Coords off = center.getOffsetOf( co );
+        Coords res;
+        if( this.horiz )  res = center.add(  off.x, -off.y );
+        else              res = center.add( -off.x,  off.y );
+        return res;
+    }
+
+    @Override
+    public Coords transformPull( Coords co ) {
+        return transformPush( co );  // For flipping, it's the same.
+    }
+    
+    
+    // Recursive methods.
     
     @Override
     public FieldObject getCellProjected( Coords co ) {

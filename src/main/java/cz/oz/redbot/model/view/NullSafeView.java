@@ -15,6 +15,17 @@ public class NullSafeView extends ViewBase implements IView {
     
     
     @Override
+    public Coords transformPush( Coords co ) {
+        return co;
+    }
+
+    @Override
+    public Coords transformPull( Coords co ) {
+        return co;
+    }
+    
+    
+    @Override
     public FieldObject getCellProjected( Coords co ) {
         FieldObject cell = this.src.getCellProjected(co);
         return cell != null ? cell : FieldObject.EMPTY;

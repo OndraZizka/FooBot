@@ -16,17 +16,10 @@ public abstract class ViewBase implements IView {
     }
     
     
-    // Core two methods.
-    @Override
-    public Coords transformPush( Coords co ) {
-        return co;
-    }
+    // Core two methods - to be overriden.
+    //public Coords transformPush( Coords co ) { }
+    //public Coords transformPull( Coords co ) { }
 
-    @Override
-    public Coords transformPull( Coords co ) {
-        return co;
-    }
-    
     
     // Recursive methods.
     
