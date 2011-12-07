@@ -13,16 +13,33 @@ import cz.oz.redbot.model.fo.FieldObject;
  */
 public interface IView {
 
+    
+    // Core two methods.
+    
     /**
-     * Get cell from this view's coords.
-     * getCell == getCellPush. 
-     * TODO: FIXME - only have one, rename to getCellProjected or such.
-     *       "getCellPull()" would have no sense - the cell can be taken from the bottom view directly.
-     * @returns  null if empty or out of bounds, respective FieldObject otherwise.
+     * Only perform tranformation of this view.
+     * @return  coords from this view projected to the view below.
      */
-    FieldObject getCellProjected(Coords co);
+    Coords transformPush( Coords co );
     
+    /**
+     * Only perform reversed tranformation of this view.
+     * @return  coords from the view below projected to this view.
+     */
+    Coords transformPull( Coords co );
+
+    // Recursive methods.
+
+    /**
+     *  Convert coords from the underlying view into this one.
+     */
+    Coords pullCoords( Coords co );
     
+    /**
+     *  Convert coords from the this view into the underlying one.
+     */
+    Coords pushCoords( Coords co );
+
     
     /**
      *  How is this view rotated compared to the real (bottom) layer?
@@ -33,17 +50,21 @@ public interface IView {
      *  What direction in this view equals to the given dir from the bottom layer?
      */
     int pullDirection( int dir );
+
     
-    
-    /**
-     *  Convert coords from the underlying view into this one.
-     */
-    Coords pullCoords( Coords co );
+    // Util recursive methods.
     
     /**
-     *  Convert coords from the this view into the underlying one.
+     * Get cell from this view's coords.
+     * "getCellPull()" would have no sense - the cell can be taken from the bottom view directly.
+     * 
+     * @returns  null if empty or out of bounds, respective FieldObject otherwise.
      */
-    Coords pushCoords( Coords co );
+    FieldObject getCellProjected( Coords co );
+    
+    
+    
+    
     
 }// interface
 

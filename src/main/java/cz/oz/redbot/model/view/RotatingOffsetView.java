@@ -4,11 +4,9 @@ import cz.oz.redbot.model.Coords;
 import cz.oz.redbot.model.fo.FieldObject;
 
 /**
- * Turns the fields around the given center.
+ * Turns the coords clockwise around the given center.
  * 
  * Dirs:  0 = same; 1 = 90 deg.; 2 = 180 deg.; 3 = 270 deg.
- * 
- * TODO: Perhaps the transposition could be removed to optimize computation.
  * 
  * @author Ondrej Zizka
  */
@@ -42,10 +40,6 @@ public final class RotatingOffsetView implements IView {
         return this.src.getCellProjected( this.pullCoords(co) );
     }
 
-    /*@Override
-    public FieldObject getCellPush( Coords co ) {
-        return this.src.getCell( this.pushCoords(co) );
-    }*/
 
     @Override
     public int getRotation() {
@@ -57,26 +51,27 @@ public final class RotatingOffsetView implements IView {
         // Fixing direction is opposite to view rotation.
         return (dir - this.dir) % 4;
     }
+    
+    
+    
+
+    @Override
+    public Coords pushCoords( Coords co ) {
+        Coords res = this.transformPush(co);
+        return src.pushCoords( res );
+    }
 
     @Override
     public Coords pullCoords( Coords co ) {
-        Coords co2 = src.pullCoords(co); // I'm not sure whether I should apply it before or after... Getting lost in that all.
-                                         // Most likely before, as it's now.
-        Coords off = this.center.getOffsetOf( co2 );
-        
-        Coords res = null;
-        switch( this.dir ){
-            case 1: res = new Coords(  off.y, -off.x  ); break;
-            case 2: res = new Coords( -off.x, -off.y  ); break;
-            case 3: res = new Coords( -off.y,  off.x  ); break;
-            case 0: res = off; break;
-        }
+        Coords co2 = src.pullCoords(co);
+        Coords res = this.transformPull(co2);
         return res;
     }
     
     
+    
     @Override
-    public Coords pushCoords( Coords co ) {
+    public Coords transformPush( Coords co ) {
         
         /// First, rotate it.
         Coords off = null;
@@ -89,10 +84,22 @@ public final class RotatingOffsetView implements IView {
         
         // Then apply it as a offset to the center.
         Coords res = this.center.add( off );
-
-        // return res;
-        return src.pushCoords( res );
+        return res;
+    }
+    
+    
+    @Override
+    public Coords transformPull(Coords co) {
+        Coords off = this.center.getOffsetOf( co );
         
+        Coords res = null;
+        switch( this.dir ){
+            case 1: res = new Coords(  off.y, -off.x  ); break;
+            case 2: res = new Coords( -off.x, -off.y  ); break;
+            case 3: res = new Coords( -off.y,  off.x  ); break;
+            case 0: res = off; break;
+        }
+        return res;
     }
     
     

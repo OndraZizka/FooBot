@@ -16,16 +16,38 @@ public abstract class ViewBase implements IView {
     }
     
     
+    // Core two methods.
     @Override
-    public FieldObject getCellProjected( Coords co ) {
-        return this.src.getCellProjected( this.pullCoords(co) );
+    public Coords transformPush( Coords co ) {
+        return co;
     }
 
+    @Override
+    public Coords transformPull( Coords co ) {
+        return co;
+    }
+    
+    
+    // Recursive methods.
+    
+    @Override
+    public Coords pullCoords( Coords co ) {
+        Coords co2 = src.pullCoords(co);
+        return transformPull(co2);
+    }
+    
+    
+    @Override
+    public Coords pushCoords( Coords co ) {
+        Coords res = transformPush( co );
+        return src.pushCoords( res );
+    }
+
+    
     @Override
     public int getRotation() {
         return this.src.getRotation();
     }
-    
     
     @Override
     public int pullDirection( int dir ){
@@ -33,19 +55,13 @@ public abstract class ViewBase implements IView {
     }
 
     
-    @Override
-    public Coords pullCoords( Coords co ) {
-        return src.pullCoords(co);
-    }
+    // Util recursive methods.
     
     @Override
-    public Coords pushCoords( Coords co ) {
-        return src.pushCoords(co);
+    public FieldObject getCellProjected( Coords co ) {
+        return this.src.getCellProjected( this.transformPush(co) );
     }
-    
-    
-    
-    
+
     
 }// class
 

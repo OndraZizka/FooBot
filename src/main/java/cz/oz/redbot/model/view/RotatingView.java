@@ -37,15 +37,39 @@ public final class RotatingView implements IView {
 
     
     
+    // Core two methods.
+    
+    @Override
+    public Coords transformPush( Coords co ) {
+        Coords res = null;
+        switch( this.dir ){
+            case 1: res = new Coords( -co.y,  co.x  ); break;
+            case 2: res = new Coords( -co.x, -co.y  ); break;
+            case 3: res = new Coords(  co.y, -co.x  ); break;
+            case 0: res = co; break;
+        }
+        return res;
+    }
+
+    @Override
+    public Coords transformPull( Coords co ) {
+        Coords res = null;
+        switch( this.dir ){
+            case 1: res = new Coords(  co.y, -co.x  ); break;
+            case 2: res = new Coords( -co.x, -co.y  ); break;
+            case 3: res = new Coords( -co.y,  co.x  ); break;
+            case 0: res = co; break;
+        }
+        return res;
+    }
+    
+    
+    
+    
     @Override
     public FieldObject getCellProjected( Coords co ) {
         return this.src.getCellProjected( this.pullCoords(co) );
     }
-
-    /*@Override
-    public FieldObject getCellPush( Coords co ) {
-        return this.src.getCell( this.pushCoords(co) );
-    }*/
 
     @Override
     public int getRotation() {
@@ -61,34 +85,16 @@ public final class RotatingView implements IView {
     @Override
     public Coords pullCoords( Coords co ) {
         Coords co2 = src.pullCoords(co);
-        
-        Coords res = null;
-        switch( this.dir ){
-            case 1: res = new Coords(  co2.y, -co2.x  ); break;
-            case 2: res = new Coords( -co2.x, -co2.y  ); break;
-            case 3: res = new Coords( -co2.y,  co2.x  ); break;
-            case 0: res = co2; break;
-        }
-        return res;
+        return transformPull(co2);
     }
     
     
     @Override
     public Coords pushCoords( Coords co ) {
-        
-        Coords res = null;
-        switch( this.dir ){
-            case 1: res = new Coords( -co.y,  co.x  ); break;
-            case 2: res = new Coords( -co.x, -co.y  ); break;
-            case 3: res = new Coords(  co.y, -co.x  ); break;
-            case 0: res = co; break;
-        }
-        
-        // return res;
+        Coords res = transformPush( co );
         return src.pushCoords( res );
-        
     }
-    
+
     
     
 }// class
