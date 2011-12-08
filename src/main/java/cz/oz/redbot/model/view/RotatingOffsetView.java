@@ -2,15 +2,21 @@ package cz.oz.redbot.model.view;
 
 import cz.oz.redbot.model.Coords;
 import cz.oz.redbot.model.fo.FieldObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Turns the coords clockwise around the given center.
+ * I.e. combination of firstly translating view, then rotating.
  * 
  * Dirs:  0 = same; 1 = 90 deg.; 2 = 180 deg.; 3 = 270 deg.
  * 
  * @author Ondrej Zizka
  */
 public final class RotatingOffsetView implements IView {
+
+    private static final Logger log = LoggerFactory.getLogger(RotatingOffsetView.class);
+
     
     private final IView src;
     
@@ -20,36 +26,34 @@ public final class RotatingOffsetView implements IView {
 
     
     public RotatingOffsetView( IView src, int dir, Coords center ) {
-        assert dir >= 0 && dir < 4;
+        if( dir < 0 && dir >= 4 )  log.warn("dir is not normalized range 0-4: " + dir);
         this.src = src;
         this.center = center;
-        this.dir = dir % 4;
+        this.dir = RotatingView.fixJavasDumbModulo( dir, 4 );
     }
 
     public RotatingOffsetView( IView src, int dir ) {
-        assert dir >= 0 && dir < 4;
-        this.src = src;
-        this.center = Coords.ZERO;
-        this.dir = dir % 4;
+        this( src, dir, Coords.ZERO );
     }
 
     
     
     @Override
     public FieldObject getCellProjected( Coords co ) {
-        return this.src.getCellProjected( this.pullCoords(co) );
+        return this.src.getCellProjected( this.transformPush(co) );
     }
 
 
     @Override
     public int getRotation() {
-        return this.src.getRotation() + this.dir;
+        return (this.src.getRotation() + this.dir) % 4;
     }
 
     @Override
     public int pullDirection(int dir) {
         // Fixing direction is opposite to view rotation.
-        return (dir - this.dir) % 4;
+        //return (dir - this.dir) % 4;
+        return ( 4 + dir - this.getRotation() % 4 ) % 4;
     }
     
     

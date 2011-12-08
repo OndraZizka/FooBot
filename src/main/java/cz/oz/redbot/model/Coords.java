@@ -32,6 +32,10 @@ public class Coords {
         return this.add( co.x, co.y );
     }
 
+    public Coords invert() {
+        return new Coords( -x, -y );
+    }
+
     
 
     /**  Optimization - no need for square root (e.g. for comparison). */

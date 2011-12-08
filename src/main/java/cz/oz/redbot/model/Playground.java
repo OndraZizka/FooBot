@@ -1,6 +1,5 @@
 package cz.oz.redbot.model;
 
-import cz.oz.redbot.model.view.OffsetView;
 import cz.oz.redbot.model.fo.FieldObject;
 import cz.oz.redbot.ex.RedBotEx;
 import cz.oz.redbot.model.view.IView;
@@ -39,14 +38,12 @@ public class Playground implements IView {
     /**
      *   @returns  null if empty or out of bounds, respective FieldObject otherwise.
      */
+    @Override
     public FieldObject getCellProjected( Coords co ) {
         if( ! isInBounds( co ) )  return null;
         return cells[co.y][co.x];
     }
 
-    public FieldObject getCellPush( Coords co ) {
-        return getCellProjected( co );
-    }
 
     public void setCell( Coords co, FieldObject fieldObject) throws RedBotEx {
         if( ! isInBounds( co ) )
@@ -74,6 +71,16 @@ public class Playground implements IView {
     
     @Override
     public Coords pushCoords(Coords co) {
+        return co;
+    }
+
+    @Override
+    public Coords transformPush(Coords co) {
+        return co;
+    }
+
+    @Override
+    public Coords transformPull(Coords co) {
         return co;
     }
     

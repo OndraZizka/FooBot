@@ -2,6 +2,8 @@ package cz.oz.redbot.model.view;
 
 import cz.oz.redbot.model.Coords;
 import cz.oz.redbot.model.fo.FieldObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Turns the fields around the given center.
@@ -14,28 +16,28 @@ import cz.oz.redbot.model.fo.FieldObject;
  */
 public final class RotatingView implements IView {
     
-    private final IView src;
+    private static final Logger log = LoggerFactory.getLogger(RotatingView.class);
     
-    private final Coords center;
+    
+    private final IView src;
     
     private int dir;
 
     
-    public RotatingView( IView src, int dir, Coords center ) {
-        assert dir >= 0 && dir < 4;
-        this.src = src;
-        this.center = center;
-        this.dir = dir % 4;
-    }
-
     public RotatingView( IView src, int dir ) {
-        assert dir >= 0 && dir < 4;
+        //assert dir >= 0 && dir < 4;
+        if( dir < 0 && dir >= 4 )  log.warn("dir is not normalized range 0-4: " + dir);
         this.src = src;
-        this.center = Coords.ZERO;
-        this.dir = dir % 4;
+        //this.dir = dir % 4;  // -3 % 4  ==  -3
+        //this.dir = ((dir % 4) + 4) % 4;
+        this.dir = fixJavasDumbModulo( dir, 4 );
+    }
+    
+    static int fixJavasDumbModulo( int val, int mod ){
+        return ((val % mod) + mod) % mod;
     }
 
-    
+
     
     // Core two methods.
     
@@ -68,18 +70,19 @@ public final class RotatingView implements IView {
     
     @Override
     public FieldObject getCellProjected( Coords co ) {
-        return this.src.getCellProjected( this.pullCoords(co) );
+        return this.src.getCellProjected( this.transformPush(co) );
     }
 
     @Override
     public int getRotation() {
-        return this.src.getRotation() + this.dir;
+        return (this.src.getRotation() + this.dir) % 4;
     }
 
     @Override
     public int pullDirection(int dir) {
         // Fixing direction is opposite to view rotation.
-        return (dir - this.dir) % 4;
+        return ( 4 + dir - this.getRotation() % 4 ) % 4;
+        //fixJavasDumbModulo( ( dir - this.dir), 4 );
     }
 
     @Override
@@ -96,6 +99,10 @@ public final class RotatingView implements IView {
     }
 
     
-    
+    @Override
+    public String toString() {
+        return "RotatingView{ dir=" + dir + ", src=" + src + " }";
+    }
+
 }// class
 

@@ -29,6 +29,10 @@ public class Flower extends FieldObject {
     public int howMuchILikeIt() {
         return 100 + points * 100;
     }
+
+    
+    public int getPoints() {        return points;    }
+    
     
 }// class
 
